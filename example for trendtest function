@@ -1,0 +1,29 @@
+library(DoseFinding)
+
+Dose<-c(0,2.5,5,10,20,50,100,200)
+
+dat<-data.frame(dose=as.factor(Dose),n=c(133,32,44,63,63,65,59,58),
+               respn=c(13,4,5,16,12,14,14,21))
+dat$resprate<-dat$respn/dat$n
+
+dat$txeff<-dat$resprate-dat$resprate[1]
+
+logfit<-glm(cbind(respn,n-respn)~dose+0,family=binomial,data=dat)
+muHat<-coef(logfit)
+S<-vcov(logfit)
+
+model<-Mods(
+ logistic=c(log(1+2*10),0.5),
+ sigEmax=c(log(1+2*10),4),
+ emax=c(log(1+2*0.1),log(1+2*1.0)),
+ linear=NULL,
+ exponential=log(1+2*1.0),
+ quadratic= -1/log(1+2*550),
+ doses=Dose)
+
+test_MCP<-trendtest(muHat=muHat, S=S, doses=Dose, trend="MCP Mod", model=model)
+
+#with arbitrary trend
+#arbitrary mu
+mu<-mu.linear(doses=seq(0,7))
+test_MCP<-trendtest(muHat=muHat, S=S, doses=transDose, trend="Arbitrary", muMat=mu)
