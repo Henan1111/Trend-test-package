@@ -1,0 +1,29 @@
+library(DoseFinding)
+N<-150
+n0<-30
+n1<-30
+k<-5
+n<-c(n0, rep(n1,k))
+#doses
+ds<-seq(0,5)
+
+
+models<-Mods(emax=c(log(1+2*0.01),log(1+2*0.25),log(1+2*4)),
+          linear=NULL,
+          exponential=c(log(1+2*0.25), log(1+2*0.75), log(1+2*3.5)),
+          sigEmax=rbind(c(log(1+2*1),25), c(log(1+2*5),25), c(log(1+2*15),25),c(log(1+2*1),5), c(log(1+2*5),5), c(log(1+2*15),5) ),
+          doses=ds, placEff=0, maxEff=0.7)
+
+
+MCP_models<-Mods(emax=c(log(1+2*0.01),log(1+2*0.25),log(1+2*4)),
+                linear=NULL,
+                exponential=c(log(1+2*0.25), log(1+2*0.75), log(1+2*3.5)),
+                sigEmax=rbind( c(log(1+2*1),5), c(log(1+2*5),5), c(log(1+2*15),5) ),
+                doses=ds, placEff=0, maxEff=0.7)
+
+
+trendpow<-trendpow(trueModel=models,n=rep(30,6), sigma=1,evalDoses=ds, alpha=0.05, trend="MCP Mod", evalModel=MCP_models)
+
+mufrmCPL<-mu.piecewise(ds)
+
+trendpow<-trendpow(trueMu=mufrmCPL,n=rep(30,6), sigma=1,evalDoses=ds, alpha=0.05, trend="MCP Mod", evalModel=MCP_models)
