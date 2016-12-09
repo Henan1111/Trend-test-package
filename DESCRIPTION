@@ -1,0 +1,17 @@
+Package: Trend
+Type: Package
+Title: Analyzing Dose Finding Experiments
+Version: 0.1.0
+Date: 2016-10-13
+Author: Henan Wang
+Maintainer: Henan Wang <hwg58@mail.missouri.edu>
+Depends:
+    DoseFinding,
+    mvtnorm,
+    R (>= 2.15.0)
+Description: Trend package provides functions for the analysis of dose-finding
+    experiments
+License: GPL-3
+NeedsCompilations:yes
+LazyData: TRUE
+RoxygenNote: 5.0.1
